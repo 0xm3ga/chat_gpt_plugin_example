@@ -8,7 +8,7 @@ The goal here is to demonstrate how a ChatGPT Plugin can enhance ChatGPT's exist
 
 ### Pre-commit Hooks
 
-This project uses pre-commit hooks to maintain code quality. The hooks are set up with the following tools:
+This project uses pre-commit hooks to maintain code quality. Make sure to install `pre-commit` using `pip install pre-commit` command, and then install git commit hooks using `pre-commit install`. The hooks are set up with the following tools:
 
 - **mypy**: A static type checker for Python, `mypy` catches bugs and prevents crashes by detecting and alerting you of type errors before runtime.
 
