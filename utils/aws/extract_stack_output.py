@@ -125,9 +125,8 @@ def main():
                 f"Output key '{args.output_key}' not found in the stack " "outputs."
             )
         else:
-            print(output_value)
-            # with open(os.getenv("GITHUB_ENV"), "a") as file:
-            #     file.write(f"{args.var_name}={output_value}\n")
+            with open(os.getenv("GITHUB_ENV"), "a") as file:
+                file.write(f"{args.var_name}={output_value}\n")
     except Exception as e:
         logging.error(f"An error occurred: {e}")
         exit(1)
