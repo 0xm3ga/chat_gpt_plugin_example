@@ -1,0 +1,9 @@
+version = 0.1
+[default.deploy.parameters]
+stack_name = "chat-gpt-plugin-example"
+resolve_s3 = true
+s3_prefix = "chat-gpt-plugin-example"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "RootDomainName=\"bluecollarverse.com\" RootBucketName=\"bluecollarverse\""
+image_repositories = []
