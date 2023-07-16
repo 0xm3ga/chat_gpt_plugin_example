@@ -81,4 +81,4 @@ jobs:
       - name: Upload files
         run: |
           aws s3 cp ./plugin/ai-plugin.json  s3://${{ needs.extract_aws_stack_variables.outputs.ROOT_BUCKET_NAME }}/.well-known/ --content-type application/json
-          aws s3 cp ./plugin/openapi.yaml  s3://${{ needs.extract_aws_stack_variables.outputs.ROOT_BUCKET_NAME }}/.well-known/ --content-type application/x-yaml
+          aws s3 cp ./plugin/openapi.yaml  s3://${{ needs.extract_aws_stack_variables.outputs.ROOT_BUCKET_NAME }}/ --content-type application/x-yaml
