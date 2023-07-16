@@ -1,0 +1,71 @@
+name: Upload updated manifest and OpenAPI spec into S3
+
+on: push
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: "us-east-1"
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  check_aws_secrets:
+    name: Check AWS secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check secrets
+        run: |
+          if [[ -z "${AWS_ACCESS_KEY_ID}" ]]; then
+            echo "AWS_ACCESS_KEY_ID is not set."
+            exit 1
+          fi
+
+          if [[ -z "${AWS_SECRET_ACCESS_KEY}" ]]; then
+            echo "AWS_SECRET_ACCESS_KEY is not set."
+            exit 1
+          fi
+
+  extract_aws_stack_variables:
+    name: Extract AWS stack outputs
+    needs: check_aws_secrets
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+    outputs:
+      ROOT_BUCKET_NAME: ${{ steps.vars.outputs.ROOT_BUCKET_NAME }}
+      ROOT_CLOUDFRONT_DISTRIBUTION_ID: ${{ steps.vars.outputs.ROOT_CLOUDFRONT_DISTRIBUTION_ID }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r ./utils/aws/requirements.txt
+
+      - name: Extract stack outputs
+        id: extract
+        run: |
+          python ./utils/aws/extract_stack_output.py RootBucketNameOutput ROOT_BUCKET_NAME
+          python ./utils/aws/extract_stack_output.py RootCloudFrontDistributionIdOutput ROOT_CLOUDFRONT_DISTRIBUTION_ID
+        env:
+          CONFIG_FILE_PATH: "./aws/samconfig.toml"
+
+      - name: Set output
+        id: vars
+        run: |
+          echo "::set-output name=ROOT_BUCKET_NAME::${{ env.ROOT_BUCKET_NAME }}"
+          echo "::set-output name=ROOT_CLOUDFRONT_DISTRIBUTION_ID::${{ env.ROOT_CLOUDFRONT_DISTRIBUTION_ID }}"
+
+      - name: Print bucket name
+        run: |
+          echo "${{ env.ROOT_BUCKET_NAME }}"
+          echo "${{ env.ROOT_CLOUDFRONT_DISTRIBUTION_ID }}"
