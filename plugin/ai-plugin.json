@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "name_for_human": "Bluecollarverse",
+  "name_for_model": "bluecollarverse",
+  "description_for_human": "Connects ChatGPT to Bluecollarverse API endpoints.",
+  "description_for_model": "Helps respond to back to user with an appropirately structured hello and goodbye messages.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://bluecollarverse.com/openapi.yaml"
+  },
+  "logo_url": "https://bluecollarverse.s3.amazonaws.com/logo.png",
+  "contact_email": "0xm3ga@gmail.com",
+  "legal_info_url": "https://bluecollarverse.com/legal"
+}
