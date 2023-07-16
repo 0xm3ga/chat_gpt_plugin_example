@@ -60,6 +60,19 @@ Resources:
     Properties:
       Name: bluecollarverse.com.
 
+  RootRecordSet:
+    Type: AWS::Route53::RecordSet
+    DependsOn:
+      - RootHostedZone
+    Properties:
+      HostedZoneId: !Ref RootHostedZone
+      Name: !Ref RootDomainName
+      Type: A
+      AliasTarget:
+        DNSName: !GetAtt RootCloudFrontDistribution.DomainName
+        HostedZoneId: Z2FDTNDATAQYW2
+        EvaluateTargetHealth: false
+
   # Cloud Front
   RootCloudFrontDistributionIdentity:
     Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
@@ -101,9 +114,6 @@ Resources:
         HttpVersion: http2
 
 Outputs:
-  RootCloudFrontDistributionOutput:
-    Description: CloudFront endpoint to add in DNS CNAME record (CNAME  @  <cloud_front_id>  default)
-    Value: !GetAtt RootCloudFrontDistribution.DomainName
   RootCloudFrontDistributionIdOutput:
     Description: Root CloudFront Distribution ID
     Value: !Ref RootCloudFrontDistribution
